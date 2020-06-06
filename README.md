@@ -4,7 +4,7 @@ Scripts to scrape data on city police budgets
 - _scrape.R_:  code to scrape city-data.com
 - _nv.rds_: example dataset (Nevada)
 
-# Issues:
+## Issues:
 - Connection will be blocked by host if you make too many requests
 - Numbers and dates scraped from web still interpreted as chr vectors instead of numerics or datetimes
 
