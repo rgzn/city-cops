@@ -59,11 +59,26 @@ get_city_payroll <- function(url) {
     str_extract("\\(.*\\)") %>% 
     str_remove_all("[\\(\\)]")
   
+  # add in city, date data
   gov <- city_govt %>% tail(n = -1L) %>% 
     row_to_names(row_number = 1) %>% 
     mutate(date_str = date,
            city = city_name,
            state = state_name) 
+  
+  # remove spaces from column names
+  gov %>% 
+    names %>% 
+    str_replace_all(" ", "_") -> 
+    names(nv_budgets) 
+  
+  # data type conversion, reorder
+  gov <- gov %>% 
+    mutate_at(c(2,5), as.numeric) %>% 
+    mutate_at(c(3,4,6), ~ as.numeric(str_remove_all(.x, pattern = "[$,]"))) %>% 
+    select(c(9, 8, 1, 7, 2, 5, 3, 4, 6))
+  
+  
   return(gov)
 }
 
@@ -88,10 +103,9 @@ city_budgets <- city_urls$URL %>%
   map_df(get_city_payroll)
 
 # get budgets, single state
-nv_urls <- city_urls %>% 
-  filter(URL %>% str_detect("Nevada.html")) 
-
-nv_budgets <- nv_urls$URL %>% 
+ca_urls <- city_urls %>% 
+  filter(URL %>% str_detect("California.html")) 
+ca_budgets <- ca_urls$URL %>% 
   map_df(get_city_payroll)
 
 
