@@ -6,7 +6,7 @@ Scripts to scrape data on city police budgets
 
 ## Issues:
 - Connection will be blocked by host if you make too many requests
-- Numbers and dates scraped from web still interpreted as chr vectors instead of numerics or datetimes
+- dates scraped from web still interpreted as chr vectors instead of datetimes
 
 ## Example Use:
 ```
@@ -28,17 +28,19 @@ nv_budgets <- nv_urls$URL %>%
 
 ## Example Output:
 ``` 
+> nv_budgets
 # A tibble: 326 x 9
-   Function  `Full-time emplo… `Monthly full-t… `Average yearly… `Part-time empl… `Monthly part-t… date_str city  state
-   <chr>     <chr>             <chr>            <chr>            <chr>            <chr>            <chr>    <chr> <chr>
- 1 Correcti… 69                $393,180         $68,379          12               $18,111          March 2… Cars… Neva…
- 2 Police P… 65                $419,167         $77,385          0                $0               March 2… Cars… Neva…
- 3 Judicial… 63                $368,178         $70,129          5                $9,902           March 2… Cars… Neva…
- 4 Firefigh… 59                $475,073         $96,625          5                $2,682           March 2… Cars… Neva…
- 5 Streets … 49                $268,154         $65,670          0                $0               March 2… Cars… Neva…
- 6 Financia… 34                $191,263         $67,505          5                $4,189           March 2… Cars… Neva…
- 7 Police -… 30                $170,473         $68,189          7                $7,832           March 2… Cars… Neva…
- 8 Other Go… 29                $155,354         $64,284          5                $5,917           March 2… Cars… Neva…
- 9 Other an… 29                $141,163         $58,412          4                $5,146           March 2… Cars… Neva…
-10 Health    28                $155,853         $66,794          9                $17,413          March 2… Cars… Neva…
+   state  city      Function                 date_str   `Full-time_employe… `Part-time_employe… `Monthly_full-time_pay… `Average_yearly_full-tim… `Monthly_part-time_pay…
+   <chr>  <chr>     <chr>                    <chr>                    <dbl>               <dbl>                   <dbl>                     <dbl>                   <dbl>
+ 1 Nevada Carson C… Correction               March 2016                  69                  12                  393180                     68379                   18111
+ 2 Nevada Carson C… Police Protection - Off… March 2016                  65                   0                  419167                     77385                       0
+ 3 Nevada Carson C… Judicial and Legal       March 2016                  63                   5                  368178                     70129                    9902
+ 4 Nevada Carson C… Firefighters             March 2016                  59                   5                  475073                     96625                    2682
+ 5 Nevada Carson C… Streets and Highways     March 2016                  49                   0                  268154                     65670                       0
+ 6 Nevada Carson C… Financial Administration March 2016                  34                   5                  191263                     67505                    4189
+ 7 Nevada Carson C… Police - Other           March 2016                  30                   7                  170473                     68189                    7832
+ 8 Nevada Carson C… Other Government Admini… March 2016                  29                   5                  155354                     64284                    5917
+ 9 Nevada Carson C… Other and Unallocable    March 2016                  29                   4                  141163                     58412                    5146
+10 Nevada Carson C… Health                   March 2016                  28                   9                  155853                     66794                   17413
+# … with 316 more rows
 ```
