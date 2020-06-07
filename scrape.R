@@ -17,17 +17,18 @@ get_city_urls <- function(url) {
     html_attr("href") %>% 
     as_tibble() %>% 
     rename(URL = value) %>% 
-    filter(URL %>% str_detect("html")) %>% 
     mutate(URL = paste0("http://www.city-data.com/city/", URL))
   
-  # city_nodes %>% 
-  #   first %>% 
-  #   html_table %>% 
-  #   as_tibble %>% 
-  #   select(Name, Population) %>% 
-  #   filter()
-  
-  return(urls)
+  cities <- city_nodes %>%
+    first %>%
+    html_table %>%
+    as_tibble %>%
+    select(Name, Population) %>%
+    cbind(urls) %>% 
+    mutate(Population = as.integer(str_remove_all(Population, ","))) %>% 
+    filter(URL %>% str_detect("html")) 
+    
+  return(cities)
 }
 
 # Input: url to city page
@@ -76,7 +77,8 @@ get_city_payroll <- function(url) {
   gov <- gov %>% 
     mutate_at(c(2,5), as.numeric) %>% 
     mutate_at(c(3,4,6), ~ as.numeric(str_remove_all(.x, pattern = "[$,]"))) %>% 
-    select(c(9, 8, 1, 7, 2, 5, 3, 4, 6))
+    select(c(9, 8, 1, 7, 2, 5, 3, 4, 6)) %>% 
+    unique()
   
   
   return(gov)
@@ -95,11 +97,15 @@ states <- main_page %>%
   filter(URL %>% str_detect("/city/"))
 
 # Get URLS for each city
-city_urls <- states$URL %>%
-  map_df(get_city_urls) 
+cities <- states$URL %>%
+  map_df(get_city_urls)
 
-# Get budgets for entire country
-city_budgets <- city_urls$URL %>% 
+# Get budgets for entire country, large cities
+
+large_cities <- cities %>% 
+  filter(Population >= 450000)
+
+large_city_budgets <- large_cities$URL %>% 
   map_df(get_city_payroll)
 
 # get budgets, single state
