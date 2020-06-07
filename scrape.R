@@ -26,7 +26,8 @@ get_city_urls <- function(url) {
     select(Name, Population) %>%
     cbind(urls) %>% 
     mutate(Population = as.integer(str_remove_all(Population, ","))) %>% 
-    filter(URL %>% str_detect("html")) 
+    filter(URL %>% str_detect("html")) %>% 
+    unique()
     
   return(cities)
 }
@@ -107,6 +108,18 @@ large_cities <- cities %>%
 
 large_city_budgets <- large_cities$URL %>% 
   map_df(get_city_payroll)
+
+large_city_budgets %>% 
+  select(state, city, Function, date_str,`Monthly_full-time_payroll`) %>% 
+  filter(str_detect(Function, "(Protection|Totals)")) %>%  
+  filter(`Monthly_full-time_payroll` >= 0)  %>% 
+  pivot_wider(names_from = Function, values_from =  `Monthly_full-time_payroll`) %>% 
+  ggplot(aes(x=`Totals for Government`, y=`Police Protection - Officers`)) + 
+  geom_point() +
+  geom_text(aes(label=ifelse(`Police Protection - Officers` > 22000000, city, '')),hjust=0, vjust=0) +
+  ylim(0, 100000000) +
+  ggtitle("Municipal monthly spending, police vs total")
+  
 
 # get budgets, single state
 ca_urls <- city_urls %>% 
