@@ -71,7 +71,7 @@ get_city_payroll <- function(url) {
   gov %>% 
     names %>% 
     str_replace_all(" ", "_") -> 
-    names(nv_budgets) 
+    names(gov) 
   
   # data type conversion, reorder
   gov <- gov %>% 
