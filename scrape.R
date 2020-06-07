@@ -109,8 +109,10 @@ large_cities <- cities %>%
 large_city_budgets <- large_cities$URL %>% 
   map_df(get_city_payroll)
 
+
+## Plot:
 large_city_budgets %>% 
-  select(state, city, Function, date_str,`Monthly_full-time_payroll`) %>% 
+  select(state, city, Function, date_str,`Monthly_full-time_payroll`) %>%
   filter(str_detect(Function, "(Protection|Totals)")) %>%  
   filter(`Monthly_full-time_payroll` >= 0)  %>% 
   pivot_wider(names_from = Function, values_from =  `Monthly_full-time_payroll`) %>% 
